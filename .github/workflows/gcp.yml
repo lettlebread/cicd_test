@@ -45,7 +45,9 @@ jobs:
       
     - name: Build
       run: |-
-        gcloud builds submit --quiet --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME" &&
-        gcloud beta run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$SERVICE_NAME --platform managed --allow-unauthenticated --timeout=60m --region=us-central1
-        
+        gcloud builds submit --quiet --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME"
+    - name: Deploy
+      run: |-
+        gcloud beta run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$SERVICE_NAME --platform managed --allow-unauthenticated --timeout=60m --region=us-central1 --quiet
+
         
