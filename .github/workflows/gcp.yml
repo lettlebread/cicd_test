@@ -1,5 +1,9 @@
 name: CI
 
+env:
+  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  SERVICE_NAME: ${{ secrets.RUN_SERVICE_NAME }}
+  
 on:
   pull_request:
     branches:
@@ -22,6 +26,7 @@ jobs:
       run: cd cicd && npm run test
   deploy_cloudrun:
     needs: test
+    if: github.ref == 'refs/heads/master'
     name: Trigger Google Cloud Build
     runs-on: ubuntu-latest
     steps:
@@ -37,8 +42,10 @@ jobs:
 
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
-
-    - name: 'Start Google Cloud Build trigger'
-      run: |
-        export CLOUDSDK_CORE_DISABLE_PROMPTS=1
-        gcloud beta builds triggers run ${{ secrets.RUN_CB_TRIGGER }} --branch master
+      
+    - name: Build
+      run: |-
+        gcloud builds submit --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME"
+        gcloud beta run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$SERVICE_NAME --platform managed --allow-unauthenticated --timeout=60m --region=us-central1
+        
+        
