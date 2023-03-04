@@ -20,3 +20,24 @@ jobs:
       run: cd cicd && npm install
     - name: Testing
       run: cd cicd && npm run test
+  deploy_cloudrun:
+    name: Trigger Google Cloud Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.RUN_SA_KEY }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
+    - name: 'Start Google Cloud Build trigger'
+      run: |
+        export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+        gcloud beta builds triggers run ${{ secrets.RUN_CB_TRIGGER }} --tag=${{ github.event.release.tag_name }}
