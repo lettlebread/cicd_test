@@ -21,6 +21,7 @@ jobs:
     - name: Testing
       run: cd cicd && npm run test
   deploy_cloudrun:
+    needs: test
     name: Trigger Google Cloud Build
     runs-on: ubuntu-latest
     steps:
