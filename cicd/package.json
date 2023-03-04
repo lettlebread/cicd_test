@@ -7,7 +7,7 @@
     "build": "npx next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "npx next build && jest --config jest.config.js"
+    "test": "jest"
   },
   "dependencies": {
     "@babel/core": "^7.21.0",
@@ -19,6 +19,7 @@
     "babel-jest": "^29.4.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
+    "jest-environment-jsdom": "^29.4.3",
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
